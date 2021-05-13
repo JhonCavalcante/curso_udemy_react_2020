@@ -1,14 +1,15 @@
 import React from 'react'
 
-export default class CadastroProduto extends React.Component{
-    state = {
-        nome: '',
-        sku: '',
-        descricao: '',
-        preco: 0,
-        fornecedor: ''
+const estadoInicial = {
+    nome: '',
+    sku: '',
+    descricao: '',
+    preco: 0,
+    fornecedor: ''  
+}
 
-    }
+export default class CadastroProduto extends React.Component{
+    state = estadoInicial;
 
     onChange = (event) =>{
         const valor = event.target.value
@@ -20,6 +21,9 @@ export default class CadastroProduto extends React.Component{
         console.log(this.state)
     }
     
+    limpaCampos = () => {
+        this.setState(estadoInicial)
+    }
 
     render(){
         return(
@@ -93,7 +97,7 @@ export default class CadastroProduto extends React.Component{
                             <button onClick={this.onSubmit} className="btn btn-success">Salvar</button>
                         </div>
                         <div className="col-md-1">
-                            <button className="btn btn-primary">Limpar</button>
+                            <button onClick={this.limpaCampos} className="btn btn-primary">Limpar</button>
                         </div>
                     </div>
 
