@@ -6,7 +6,9 @@ const estadoInicial = {
     sku: '',
     descricao: '',
     preco: 0,
-    fornecedor: ''  
+    fornecedor: '' ,
+    sucesso: false ,
+    errors: []
 }
 
 export default class CadastroProduto extends React.Component{
@@ -31,9 +33,17 @@ export default class CadastroProduto extends React.Component{
             preco: this.state.preco,
             fornecedor: this.state.fornecedor  
         }
-        this.service.salvar(produto)
-        this.limpaCampos()
-        console.log('salvo com sucesso')
+        try{
+            this.service.salvar(produto)
+            this.limpaCampos()
+            this.setState({sucesso: true})
+        }catch(erro){
+            console.log(erro)
+            const errors = erro.errors
+            this.setState({errors : errors})
+        }
+
+        
     }
     
     limpaCampos = () => {
@@ -47,6 +57,34 @@ export default class CadastroProduto extends React.Component{
                     Cadastro de Produto
                 </div>
                 <div className="card-body">
+
+                {
+                   this.state.sucesso&&
+                    
+                    <div class="alert alert-dismissible alert-success">
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        <strong>Bem feito!</strong> Cadastro realizado com sucesso.
+                    </div>
+                    
+                }
+
+                {   
+                    this.state.errors.length > 0 &&
+                    
+                    this.state.errors.map( msg=> {
+                        return(
+                            <div class="alert alert-dismissible alert-danger">
+                                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                <strong>Erro!</strong> {msg}
+                            </div>
+                        )
+                    
+                    })
+                    
+                }
+
+
+
                     <div className="row">
                         <div className="col-md-6">
                             <div className="form-group">
