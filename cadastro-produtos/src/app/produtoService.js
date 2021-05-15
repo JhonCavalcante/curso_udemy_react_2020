@@ -2,7 +2,7 @@ import React from 'react'
 const PRODUTOS = '_PRODUTOS';
 
 export function ErroValidacao(erros){
-    this.errors = erros
+    this.errors = erros;
 }
 
 export default class ProdutoService{
