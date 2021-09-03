@@ -1,4 +1,7 @@
 import React from 'react'
+import Card from '../../components/card'
+import ProdutosTable from './produtosTables'
+
 import ProdutoService from '../../app/produtoService'
 import {withRouter} from 'react-router-dom'
 
@@ -22,48 +25,20 @@ class ConsultaProdutos extends React.Component{
         this.props.history.push(`/cadastro-produtos/${sku}`)
     }
 
+    deletar = (sku) => {
+        const produtos = this.service.deletar(sku)
+        this.setState({produtos})
+    }
+
 
     render(){
         return(
-            <div className="card">
-                <div className="card-header">
-                    Consulta de Produto
-                </div>
-                <div className="card-body">
-                    <table className="table table-houver">
-                        <thead>
-                            <tr>
-                                <th>Nome</th>
-                                <th>SKU</th>
-                                <th>Preco</th>
-                                <th>Fornecedor</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-
-                        <tbody>
-                            {
-                                this.state.produtos.map( (produto,index) =>{
-                                    return(
-                                        <tr key={index}>
-                                            <th>{produto.nome}</th>
-                                            <th>{produto.sku}</th>
-                                            <th>{produto.preco}</th>
-                                            <th>{produto.fornecedor}</th>
-                                            <th>
-                                                <button onClick={ () => this.preparaEditar(produto.sku)} className="btn btn-primary">Editar</button>
-                                                <button className="btn btn-danger">Remover</button>
-                                            </th>
-                                        </tr>
-                                    )        
-                                })
-                            }
-                        </tbody>
-
-
-                    </table>
-                </div>
-            </div>
+            <Card hender="Consulta de Produto">
+                <ProdutosTable produtos={this.state.produtos} 
+                                editarAction={this.preparaEditar} 
+                                deletarAction={this.deletar} />
+                    
+            </Card>
         )
     }
 }

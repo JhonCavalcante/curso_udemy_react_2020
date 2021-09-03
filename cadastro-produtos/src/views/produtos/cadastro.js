@@ -1,5 +1,7 @@
 import React from 'react'
+import Card from '../../components/card'
 import ProdutoService from '../../app/produtoService'
+import {withRouter} from 'react-router-dom'
 
 const estadoInicial = {
     nome: '',
@@ -8,10 +10,11 @@ const estadoInicial = {
     preco: 0,
     fornecedor: '' ,
     sucesso: false ,
-    errors: []
+    errors: [],
+    atualizando: false
 }
 
-export default class CadastroProduto extends React.Component{
+class CadastroProduto extends React.Component{
     state = estadoInicial;
 
     constructor(){
@@ -50,14 +53,23 @@ export default class CadastroProduto extends React.Component{
         this.setState(estadoInicial)
     }
 
+    componentDidMount = () => {
+        const sku = this.props.match.params.sku
+
+        if(sku){
+           const resultado = this
+           .service
+           .obterProdutos().filter( produto => produto.sku === sku  )
+           if(resultado.length === 1){
+               const produtoEncontrato = resultado[0]
+               this.setState({...produtoEncontrato, atualizando: true})
+           }
+        }
+    }
+
     render(){
         return(
-            <div className="card">
-                <div className="card-header">
-                    Cadastro de Produto
-                </div>
-                <div className="card-body">
-
+            <Card header = {this.state.atualizando ? 'Atualização de Produto': 'Cadastro de Produto'}>
                 {
                    this.state.sucesso&&
                     
@@ -102,6 +114,7 @@ export default class CadastroProduto extends React.Component{
                                 <label>SKU: *</label>
                                 <input type="text" 
                                 name="sku" 
+                                disabled={this.state.atualizando}
                                 onChange={this.onChange}
                                 value={this.state.sku} 
                                 className="form-control" />
@@ -147,7 +160,9 @@ export default class CadastroProduto extends React.Component{
 
                     <div className="row">
                         <div className="col-md-1">
-                            <button onClick={this.onSubmit} className="btn btn-success">Salvar</button>
+                            <button onClick={this.onSubmit} className="btn btn-success">
+                            {this.state.atualizando ? 'Atualizar': 'Salvar'}
+                            </button>
                         </div>
                         <div className="col-md-1">
                             <button onClick={this.limpaCampos} className="btn btn-primary">Limpar</button>
@@ -155,8 +170,9 @@ export default class CadastroProduto extends React.Component{
                     </div>
 
 
-                </div>
-            </div>
+                
+            </Card>
         )
     }
 }
+export default withRouter(CadastroProduto);
